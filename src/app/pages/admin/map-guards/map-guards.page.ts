@@ -3,18 +3,25 @@ import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { CountriesService } from 'src/app/services/countries/countries.service';
 import { CountryStorageService } from 'src/app/services/storage/country-storage.service';
-// import * as L from 'leaflet'; // PASO 1: Se comenta la importación de Leaflet.
+import * as L from 'leaflet'; // PASO 1: Se comenta la importación de Leaflet.
 import { Socket, io } from 'socket.io-client';
 import { environment } from 'src/environments/environment';
 
 //Interfaces
 import { GuardPointInterface } from 'src/app/interfaces/guardsPoints-interface';
 
+<<<<<<< Updated upstream
 //Pipes
 import { FilterByPipe } from '../../../pipes/filter-by.pipe';
 
 //Componentes
-import { NavbarBackComponent } from '../../../components/navbars/navbar-back/navbar-back.component';
+=======
+import { IonicModule } from '@ionic/angular';
+import { CommonModule } from '@angular/common';
+>>>>>>> Stashed changes
+import { NavbarBackComponent } from 'src/app/components/navbars/navbar-back/navbar-back.component';
+
+
 @Component({
   selector: 'app-map-guards',
   templateUrl: './map-guards.page.html',
@@ -23,8 +30,7 @@ import { NavbarBackComponent } from '../../../components/navbars/navbar-back/nav
   imports: [
     CommonModule,
     IonicModule,
-    NavbarBackComponent,
-    FilterByPipe
+    NavbarBackComponent
   ]
 })
 export class MapGuardsPage implements OnInit {
@@ -73,13 +79,13 @@ export class MapGuardsPage implements OnInit {
       this.countryLat = res['latitude'];
       this.countryLng = res['longitude'];
       // Se comenta la llamada a la inicialización del mapa.
-      // this.initMap(res['latitude'], res['longitude']); 
+      this.initMap(res['latitude'], res['longitude']); 
     });
   }
 
   private initMap(mapLat, mapLng): void {
     // --- PASO 2: Se comenta todo el cuerpo de la función para desactivar la lógica del mapa. ---
-    /*
+    
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
     if (prefersDark.matches) {
       this.setTileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}');
@@ -95,12 +101,12 @@ export class MapGuardsPage implements OnInit {
     setTimeout(() => {
       this.getMap().invalidateSize(true);
     }, 100);
-    */
+    
   }
 
   public addPoint(lat: number, lng: number, html: string = null): void {
     // Se comenta la lógica que crea el marcador en el mapa.
-    /*
+    
     const marker = L.circle([lat, lng], {
       color: 'red',
       fillColor: '#f03',
@@ -111,7 +117,7 @@ export class MapGuardsPage implements OnInit {
       .addTo(this.getMap());
 
     this.markers.push(marker);
-    */
+    
   }
 
   public getMap() {
@@ -123,15 +129,15 @@ export class MapGuardsPage implements OnInit {
 
   public removeMarkers() {
     // Se comenta la lógica para evitar errores si this.getMarkers() está vacío.
-    /*
+    
     this.getMarkers().forEach(marker => {
       this.removeMarker(marker);
     });
-    */
+    
   }
 
   public removeMarker(marker) {
-    // this.map.removeLayer(marker);
+    this.map.removeLayer(marker);
   }
 
   public getMarkers() {
@@ -139,6 +145,6 @@ export class MapGuardsPage implements OnInit {
   }
 
   public setTileLayer(url: any): void {
-    // this.tileLayer = L.tileLayer(url, { attribution: '' });
+    this.tileLayer = L.tileLayer(url, { attribution: '' });
   }
 }

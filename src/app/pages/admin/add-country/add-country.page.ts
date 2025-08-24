@@ -1,12 +1,9 @@
 // --- Archivo: src/app/pages/admin/add-country/add-country.page.ts (Corregido) ---
 
 import { AfterViewInit, Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { IonicModule } from '@ionic/angular';
-import { ReactiveFormsModule } from '@angular/forms';
-// import 'leaflet/dist/leaflet.css'; // PASO 1: Se comenta la importación de Leaflet.
-// import * as L from 'leaflet'; // PASO 2: Se comenta la importación de Leaflet.
-// import 'leaflet-defaulticon-compatibility'; // PASO 3: Se comenta la importación de Leaflet.
+import 'leaflet/dist/leaflet.css'; // PASO 1: Se comenta la importación de Leaflet.
+import * as L from 'leaflet'; // PASO 2: Se comenta la importación de Leaflet.
+import 'leaflet-defaulticon-compatibility'; // PASO 3: Se comenta la importación de Leaflet.
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { AlertService } from 'src/app/services/helpers/alert.service';
 import { HttpClient } from '@angular/common/http';
@@ -57,13 +54,13 @@ export class AddCountryPage implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    // PASO 4: Se comenta la inicialización del mapa para desactivarlo.
-    // this.initMap();
+    
+    this.initMap();
   }
 
   private initMap(): void {
-    // --- SE COMENTA TODA LA LÓGICA DEL MAPA PARA DESACTIVARLO ---
-    /*
+    
+    
     this.map = L.map('map', {
       center: [-27.5615, -58.7521],
       zoom: 8
@@ -93,8 +90,8 @@ export class AddCountryPage implements AfterViewInit {
       shadowSize: [41, 41]
     });
 
-    this.marker = new L.marker([-27.5615, -58.7521], {
-      draggable: 'true'
+    this.marker = L.marker([-27.5615, -58.7521], {
+      draggable: true
     });
 
     L.Marker.prototype.options.icon = iconDefault;
@@ -105,7 +102,7 @@ export class AddCountryPage implements AfterViewInit {
       this.lat = position.lat;
       this.lng = position.lng;
     });
-    */
+    
   }
 
   setCoords() {
