@@ -4,6 +4,7 @@ import { IonicModule } from '@ionic/angular';
 import { CountriesService } from 'src/app/services/countries/countries.service';
 import { CountryStorageService } from 'src/app/services/storage/country-storage.service';
 import * as L from 'leaflet'; // PASO 1: Se comenta la importación de Leaflet.
+import * as L from 'leaflet'; // PASO 1: Se comenta la importación de Leaflet.
 import { Socket, io } from 'socket.io-client';
 import { environment } from 'src/environments/environment';
 
@@ -29,6 +30,9 @@ import { NavbarBackComponent } from 'src/app/components/navbars/navbar-back/navb
   standalone: true,
   imports: [
     CommonModule,
+    IonicModule,
+    NavbarBackComponent
+  ]
     IonicModule,
     NavbarBackComponent
   ]
@@ -80,11 +84,13 @@ export class MapGuardsPage implements OnInit {
       this.countryLng = res['longitude'];
       // Se comenta la llamada a la inicialización del mapa.
       this.initMap(res['latitude'], res['longitude']); 
+      this.initMap(res['latitude'], res['longitude']); 
     });
   }
 
   private initMap(mapLat, mapLng): void {
     // --- PASO 2: Se comenta todo el cuerpo de la función para desactivar la lógica del mapa. ---
+    
     
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
     if (prefersDark.matches) {
@@ -102,10 +108,12 @@ export class MapGuardsPage implements OnInit {
       this.getMap().invalidateSize(true);
     }, 100);
     
+    
   }
 
   public addPoint(lat: number, lng: number, html: string = null): void {
     // Se comenta la lógica que crea el marcador en el mapa.
+    
     
     const marker = L.circle([lat, lng], {
       color: 'red',
@@ -117,6 +125,7 @@ export class MapGuardsPage implements OnInit {
       .addTo(this.getMap());
 
     this.markers.push(marker);
+    
     
   }
 
@@ -130,13 +139,16 @@ export class MapGuardsPage implements OnInit {
   public removeMarkers() {
     // Se comenta la lógica para evitar errores si this.getMarkers() está vacío.
     
+    
     this.getMarkers().forEach(marker => {
       this.removeMarker(marker);
     });
     
+    
   }
 
   public removeMarker(marker) {
+    this.map.removeLayer(marker);
     this.map.removeLayer(marker);
   }
 
@@ -145,6 +157,7 @@ export class MapGuardsPage implements OnInit {
   }
 
   public setTileLayer(url: any): void {
+    this.tileLayer = L.tileLayer(url, { attribution: '' });
     this.tileLayer = L.tileLayer(url, { attribution: '' });
   }
 }
