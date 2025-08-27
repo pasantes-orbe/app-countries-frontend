@@ -1,0 +1,56 @@
+/* ====================================================== */
+/* ADMIN/EVENTS-HISTORIAL.PAGE.SCSS */
+/* ====================================================== */
+:host {
+  ion-toolbar {
+    --background: var(--ion-toolbar-background);
+  }
+
+  ion-card {
+    --background: var(--color-card);
+    padding: 8px;
+  }
+
+  ion-searchbar {
+    --background: var(--ion-background-color);
+    --border-radius: 8px;
+    margin-bottom: 1rem;
+    padding: 0;
+  }
+
+  .table-responsive-wrapper {
+    overflow-x: auto;
+  }
+
+  .styled-table {
+    width: 100%;
+    border-collapse: collapse;
+
+    thead th {
+      font-family: var(--font-heading);
+      font-weight: 600;
+      color: var(--color-text-secondary);
+      text-align: left;
+      padding: 12px;
+      border-bottom: 2px solid var(--color-border);
+    }
+
+    tbody td {
+      padding: 12px;
+      border-bottom: 1px solid var(--color-border);
+      vertical-align: middle;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .action-cell {
+      text-align: center;
+    }
+
+    ion-badge {
+      font-weight: 600;
+    }
+  }
+}

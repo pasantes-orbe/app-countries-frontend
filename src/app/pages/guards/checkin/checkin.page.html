@@ -1,14 +1,19 @@
+<!-- ====================================================== -->
+<!-- GUARDS/CHECKIN.PAGE.HTML -->
+<!-- ====================================================== -->
 <ion-header mode="ios" [translucent]="true">
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button default-href="/guards/home"></ion-back-button>
+    </ion-buttons>
     <ion-title>Check In</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
+  <h3 class="page-subtitle">REGISTRAR INGRESO</h3>
 
-  <h3 class="text-center">REGISTRAR INGRESO</h3>
-
-  <form [formGroup]="getForm()" (ngSubmit)="submitIncome()" >
+  <form [formGroup]="getForm()" (ngSubmit)="submitIncome()">
     <ion-item>
       <ion-label position="floating">Nombre<ion-text color="danger">*</ion-text></ion-label>
       <ion-input [(ngModel)]="incomeData.name" required formControlName="name" type="text"></ion-input>
@@ -24,19 +29,16 @@
       <ion-input [(ngModel)]="incomeData.DNI" required formControlName="DNI" type="text"></ion-input>
     </ion-item>
 
-    <ion-searchbar #searchBar [(ngModel)]="searchKey" [ngModelOptions]="{standalone: true}" animated   debounce="500" placeholder="Buscar Propietario" mode="ios"  [(ngModel)]="term" (ionChange)="filtrarOwners($any($event).detail.value)" ></ion-searchbar>
-    <ion-list *ngIf="searchKey?.length > 3">
+    <ion-searchbar #searchBar [(ngModel)]="searchKey" [ngModelOptions]="{standalone: true}" animated debounce="500" placeholder="Buscar Propietario" mode="ios" (ionChange)="filtrarOwners($any($event).detail.value)"></ion-searchbar>
+    
+    <ion-list *ngIf="owners.length > 0">
       <ion-radio-group (ionChange)="setOwner($event)" formControlName="ownerID">
-
-
-        <ion-item *ngFor="let owner of owners | filterBy: searchKey ; let i = index" >
-          <ion-label >{{owner.user.name}} {{owner.user.lastname}} - {{owner.user.dni}}</ion-label>
-          <ion-radio  [value]="owner.user.id"></ion-radio>
+        <ion-item *ngFor="let owner of owners | filterBy: searchKey">
+          <ion-label>{{owner.user.name}} {{owner.user.lastname}} - {{owner.user.dni}}</ion-label>
+          <ion-radio [value]="owner.user.id"></ion-radio>
         </ion-item>
-
       </ion-radio-group>
     </ion-list>
-
 
     <ion-item>
       <ion-label class="ion-text-wrap mb-3" position="stacked">Fecha y hora de ingreso</ion-label>
@@ -45,9 +47,9 @@
 
     <ion-modal [keepContentsMounted]="true">
       <ng-template>
-          <ion-datetime [(ngModel)]="incomeData.date" presentation="date-time" formControlName="date" (ionChange)="getDate($event)" color="primary" [showDefaultTitle]="true"  id="datetime">
+        <ion-datetime [(ngModel)]="incomeData.date" presentation="date-time" formControlName="date" (ionChange)="getDate($event)" color="primary" [showDefaultTitle]="true" id="datetime">
           <span slot="title">SELECCIONA LA FECHA DE INGRESO</span>
-          </ion-datetime>
+        </ion-datetime>
       </ng-template>
     </ion-modal>
 
@@ -62,19 +64,18 @@
       </ion-select>
     </ion-item>
 
-    <ion-item *ngIf="incomeData.transport != '' && (incomeData.transport != 'Bicicleta' && incomeData.transport != 'A pie')">
+    <ion-item *ngIf="incomeData.transport && (incomeData.transport !== 'Bicicleta' && incomeData.transport !== 'A pie')">
       <ion-label position="floating">Patente</ion-label>
       <ion-input (ionChange)="changePatent($event)" required type="text"></ion-input>
     </ion-item>
 
     <ion-item>
-      <ion-label  position="floating">Observaciones</ion-label>
+      <ion-label position="floating">Observaciones</ion-label>
       <ion-textarea #textArea (ionChange)="setObservations($event)" rows="5"></ion-textarea>
     </ion-item>
     
-      <ion-button size="large" block color="primary" type="submit" [disabled]="getForm().invalid">
-        Ingresar
-      </ion-button>
+    <ion-button class="submit-button" size="large" expand="block" color="primary" type="submit" [disabled]="getForm().invalid">
+      Registrar Ingreso
+    </ion-button>
   </form>
-
 </ion-content>

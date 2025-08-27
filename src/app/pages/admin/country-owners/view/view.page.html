@@ -1,65 +1,50 @@
-<app-navbar-back title="Panel de Administración"></app-navbar-back>
+<!-- ====================================================== -->
+<!-- ADMIN/COUNTRY-OWNERS/VIEW.PAGE.HTML (Plantilla de Listado) -->
+<!-- ====================================================== -->
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button default-href="/admin/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Gestionar Propietarios</ion-title>
+  </ion-toolbar>
+</ion-header>
 
 <ion-content class="ion-padding">
-
-  <div class="text-center">
-    <ion-button class="top-button" routerLink="/admin/nuevo-propietario" expand="block">
-      <ion-icon slot="start" name="add"></ion-icon>
-      Nuevo Propietario
-    </ion-button>
-  </div>
-
-  <ion-searchbar mode="ios" animated debounce="500" [(ngModel)]="searchKey"
-    placeholder="Buscar por Nombre o N° de propiedad">
-  </ion-searchbar>
-
-  <div class="table-responsive container">
-    <table class="table text-center">
-      <thead>
-        <tr>
-          <th scope="col">Apellido</th>
-          <th scope="col">Nombre</th>
-          <th scope="col">DNI</th>
-          <th scope="col">Propiedad</th>
-          <th scope="col">Editar</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- 
-          SOLUCIÓN: Usar getter que combina filtrado y ordenamiento
-          Esto elimina la dependencia de pipes externos y mejora el rendimiento
-        -->
-        <tr *ngFor="let owner of owners | filterBy: searchKey; let i = index">
-          <td>{{ owner.user.lastname }}</td>
-          <td>{{ owner.user.name }}</td>
-          <td>{{ owner.user.dni }}</td>
-          <td>{{ owner.property.name }}</td>
-          <td>
-            <ion-icon size="large" name="create-outline" (click)="editUser(owner.user.id, i)" style="cursor: pointer;">
-            </ion-icon>
-          </td>
-        </tr>
-
-        <!-- Mensaje cuando no hay resultados -->
-        <tr *ngIf="filteredAndSortedOwners.length === 0">
-          <td colspan="5" class="text-center">
-            <ion-text color="medium">
-              {{ searchKey ? 'No se encontraron resultados' : 'No hay propietarios registrados' }}
-            </ion-text>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</ion-content>
-
-<ion-footer>
-  <ion-toolbar>
-    <div class="text-center">
-      <ion-button routerLink="/admin/asignar-propiedad" expand="block">
-        <ion-icon slot="start" name="add"></ion-icon>
-        Asignar Propiedades
+  <ion-card>
+    <ion-card-header class="table-header">
+      <ion-searchbar placeholder="Buscar propietario..."></ion-searchbar>
+      <ion-button shape="round">
+        <ion-icon slot="start" name="add-outline"></ion-icon>
+        Añadir Propietario
       </ion-button>
+    </ion-card-header>
+    
+    <div class="table-responsive-wrapper">
+      <table class="styled-table">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>DNI</th>
+            <th>Email</th>
+            <th>Propiedades</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Las filas se generarán dinámicamente -->
+          <tr>
+            <td>Juan Pérez</td>
+            <td>30.123.456</td>
+            <!--<td>juan.perez@hotmail.com</td> -->
+            <td>2</td>
+            <td class="action-cell">
+              <ion-button fill="clear" color="primary"><ion-icon slot="icon-only" name="pencil-outline"></ion-icon></ion-button>
+              <ion-button fill="clear" color="danger"><ion-icon slot="icon-only" name="trash-outline"></ion-icon></ion-button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-  </ion-toolbar>
-</ion-footer>
+  </ion-card>
+</ion-content>

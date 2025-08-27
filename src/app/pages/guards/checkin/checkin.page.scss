@@ -1,0 +1,50 @@
+/* ====================================================== */
+/* GUARDS/CHECKIN.PAGE.SCSS */
+/* ====================================================== */
+:host {
+  ion-toolbar {
+    --background: var(--ion-toolbar-background);
+  }
+
+  .page-subtitle {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 1.2rem;
+    text-align: center;
+    color: var(--color-text-secondary);
+    margin-bottom: 1.5rem;
+  }
+
+  form {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  ion-item, ion-searchbar {
+    --background: var(--color-card);
+    --border-color: var(--color-border);
+    --border-radius: 8px;
+    margin-bottom: 1rem;
+  }
+
+  ion-list {
+    background: transparent;
+    margin-bottom: 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 0;
+  }
+
+  ion-datetime-button {
+    --background: var(--color-card);
+    --border-radius: 8px;
+    width: 100%;
+  }
+
+  .submit-button {
+    margin-top: 1.5rem;
+    height: 48px;
+    font-family: var(--font-heading);
+    font-weight: 600;
+  }
+}

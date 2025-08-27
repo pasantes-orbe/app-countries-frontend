@@ -8,14 +8,14 @@ import { MenuController } from '@ionic/angular';
 // Interfaces
 import { UserInterface } from 'src/app/interfaces/user-interface';
 
-// Servicios
+// Servicios - COMENTAR LOS QUE REQUIEREN SERVIDOR:
 import { NavigationService } from 'src/app/helpers/navigation.service';
-import { NotificationsService } from 'src/app/services/notifications/notifications.service';
-import { PushService } from 'src/app/services/pushNotifications/push.service';
-import { CountryStorageService } from 'src/app/services/storage/country-storage.service';
-import { IntervalStorageService } from 'src/app/services/storage/interval-storage.service';
-import { UserStorageService } from 'src/app/services/storage/user-storage.service';
-import { WebSocketService } from 'src/app/services/websocket/web-socket.service';
+// import { NotificationsService } from 'src/app/services/notifications/notifications.service';
+// import { PushService } from 'src/app/services/pushNotifications/push.service';
+// import { CountryStorageService } from 'src/app/services/storage/country-storage.service';
+// import { IntervalStorageService } from 'src/app/services/storage/interval-storage.service';
+// import { UserStorageService } from 'src/app/services/storage/user-storage.service';
+// import { WebSocketService } from 'src/app/services/websocket/web-socket.service';
 
 @Component({
     selector: 'app-navbar-guards',
@@ -32,21 +32,24 @@ export class NavbarGuardsComponent implements OnInit {
     protected user: UserInterface;
     protected notifications: any[] = [];
     protected id_user: any;
-    public countryName: string = "";
+    public countryName: string = "ZENTRY"; // VALOR TEMPORAL
     public dropdownState: boolean = false;
 
     constructor(
         public router: Router,
-        protected _userStorage: UserStorageService,
+        // COMENTAR SERVICIOS QUE REQUIEREN SERVIDOR:
+        // protected _userStorage: UserStorageService,
         private menu: MenuController,
-        private _socketService: WebSocketService,
-        protected _countryStorage: CountryStorageService,
-        protected _intervalStorageService: IntervalStorageService,
-        private _pushService: PushService,
-        private _notificationService: NotificationsService
+        // private _socketService: WebSocketService,
+        // protected _countryStorage: CountryStorageService,
+        // protected _intervalStorageService: IntervalStorageService,
+        // private _pushService: PushService,
+        // private _notificationService: NotificationsService
     ) { }
 
     async ngOnInit() {
+        // COMENTAR TODO LO QUE REQUIERE SERVIDOR:
+        /*
         const country = await this._countryStorage.getCountry();
         this.countryName = country.name;
 
@@ -62,6 +65,7 @@ export class NavbarGuardsComponent implements OnInit {
         );
 
         const timerID = await this._intervalStorageService.getInterval_id();
+        */
     }
 
     ionViewWillEnter() {
@@ -69,6 +73,11 @@ export class NavbarGuardsComponent implements OnInit {
     }
 
     async signOut() {
+        // SIMPLIFICAR PARA SOLO REDIRIGIR:
+        this.router.navigate(['/login']);
+        
+        // COMENTAR TODO LO DEMÁS:
+        /*
         const user = this.getUser();
         const timerID = await this._intervalStorageService.getInterval_id();
 
@@ -80,6 +89,7 @@ export class NavbarGuardsComponent implements OnInit {
         if (Capacitor.getPlatform() == 'android') {
             this._pushService.removeOneSignalID();
         }
+        */
     }
 
     protected navigate(url: string): void {
@@ -118,11 +128,14 @@ export class NavbarGuardsComponent implements OnInit {
     }
 
     public updateNotifications() {
+        // COMENTAR:
+        /*
         this._notificationService.getAllByUser(this.id_user).subscribe(
             res => {
                 console.log(res);
                 this.notifications = res;
             }
         );
+        */
     }
 }

@@ -1,54 +1,59 @@
-<app-navbar-back title="Panel de Administración"></app-navbar-back>
-
-<ion-content>
-
-  <ion-searchbar mode="ios" animated debounce="500" [(ngModel)]="searchKey"
-    placeholder="Buscar por estado, lugar, o nombre"></ion-searchbar>
-  <div class="table-responsive container">
-    <table class="table text-center">
-      <thead>
-        <tr>
-          <th scope="col">Cambiar Estado</th>
-          <th scope="col">Estado</th>
-          <th scope="col">Fecha</th>
-          <th scope="col">Lugar</th>
-          <th scope="col">Reservado por</th>
-          <th scope="col">Invitados</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let reservation of reservations | filterBy: searchKey ; let i = index">
-          <td *ngIf="reservation.status === 'pendiente'">
-            <ion-button (click)="resolverPeticion(true, reservation.id)" shape="round"
-              color="success">Aceptar</ion-button>
-            <ion-button (click)="resolverPeticion(false, reservation.id)" shape="round"
-              color="danger">Rechazar</ion-button>
-          </td>
-          <td *ngIf="reservation.status !== 'pendiente'">
-            <p>-</p>
-          </td>
-          <td *ngIf="reservation.status === 'aprobado'"><ion-badge color="success">Aprobado</ion-badge></td>
-          <td *ngIf="reservation.status === 'rechazado'"><ion-badge color="danger">Rechazado</ion-badge></td>
-          <td *ngIf="reservation.status === 'pendiente'"><ion-badge color="warning">Pendiente</ion-badge></td>
-          <td>{{reservation.date | date: 'dd/MM/yyyy hh:mm'}}</td>
-          <td class="text-center">{{reservation.amenity.name}}</td>
-          <td> {{reservation.user.name}} - {{reservation.user.lastname}} </td>
-          <td>
-            <ion-button size="small" (click)="openModal(reservation, i)" shape="round">
-              Ver Invitados
-            </ion-button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
+<!-- ====================================================== -->
+<!-- ADMIN/EVENTS-HISTORIAL.PAGE.HTML -->
+<!-- ====================================================== -->
+<ion-header>
   <ion-toolbar>
-    <div class="text-center">
-      <ion-button routerLink="/reservar" expand="block">
-        <ion-icon slot="start" name="add"></ion-icon>
-        Agregar Evento
-      </ion-button>
-    </div>
+    <ion-buttons slot="start">
+      <ion-back-button default-href="/guards/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Historial de Eventos</ion-title>
   </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-card>
+    <ion-searchbar mode="ios" animated debounce="500" [(ngModel)]="searchKey"
+      placeholder="Buscar por estado, lugar, o nombre"></ion-searchbar>
+    
+    <div class="table-responsive-wrapper">
+      <table class="styled-table">
+        <thead>
+          <tr>
+            <th>Estado</th>
+            <th>Fecha</th>
+            <th>Lugar</th>
+            <th>Reservado por</th>
+            <th>Invitados</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let reservation of reservations | filterBy: searchKey ; let i = index">
+            <td>
+              <ion-badge *ngIf="reservation.status === 'aprobado'" color="success">Aprobado</ion-badge>
+              <ion-badge *ngIf="reservation.status === 'rechazado'" color="danger">Rechazado</ion-badge>
+              <ion-badge *ngIf="reservation.status === 'pendiente'" color="warning">Pendiente</ion-badge>
+            </td>
+            <td>{{reservation.date | date: 'dd/MM/yyyy hh:mm'}}</td>
+            <td>{{reservation.amenity.name}}</td>
+            <td>{{reservation.user.name}} {{reservation.user.lastname}}</td>
+            <td class="action-cell">
+              <ion-button size="small" (click)="openModal(reservation, i)" shape="round" fill="outline">
+                Ver
+              </ion-button>
+            </td>
+            <td class="action-cell" *ngIf="reservation.status === 'pendiente'">
+              <ion-button (click)="resolverPeticion(true, reservation.id)" fill="clear" color="success">
+                <ion-icon slot="icon-only" name="checkmark-outline"></ion-icon>
+              </ion-button>
+              <ion-button (click)="resolverPeticion(false, reservation.id)" fill="clear" color="danger">
+                <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+              </ion-button>
+            </td>
+            <td *ngIf="reservation.status !== 'pendiente'">-</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </ion-card>
 </ion-content>

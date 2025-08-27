@@ -1,8 +1,96 @@
-// ion-icon{
-//     font-size: 2em;
-// }
+/* ====================================================== */
+/* ADMIN/HOME.PAGE.SCSS */
+/* ====================================================== */
+:host {
+  ion-header:not([collapse="condense"]) ion-toolbar {
+    --background: var(--ion-toolbar-background);
+    --color: #FFFFFF; // ← AGREGAR COLOR BLANCO AL HEADER
+  }
 
-.self-to-end{
-    text-align: right;
+  .header-brand {
+    display: flex;
+    align-items: center;
+  }
+  
+  .header-logo {
+    height: 32px;
+    margin-left: 16px;
+  }
+  
+  .header-title-text {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 1.5rem;
+    margin-left: 8px;
+    color: #FFFFFF !important; // ← FORZAR BLANCO
+  }
+  
+  ion-avatar {
+    width: 36px;
+    height: 36px;
+    margin-right: 16px;
+  }
 
+  .page-title {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 1.8rem;
+    padding: 0;
+    color: #FFFFFF !important; // ← FORZAR BLANCO
+  }
+
+  .dashboard-card {
+    --background: var(--color-card);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    cursor: pointer; // ← AGREGAR CURSOR POINTER
+    transition: all 0.3s ease; // ← AGREGAR TRANSICIÓN
+
+    // ← AGREGAR HOVER EFFECT
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    ion-card-header {
+      display: flex;
+      align-items: center;
+      padding-bottom: 8px;
+
+      ion-icon {
+        font-size: 1.8rem;
+        color: var(--ion-color-primary);
+        margin-right: 12px;
+      }
+      
+      ion-card-title {
+        font-family: var(--font-heading);
+        font-weight: 600;
+        font-size: 1.2rem;
+        color: #FFFFFF !important; // ← FORZAR BLANCO
+      }
+    }
+
+    ion-card-content {
+      p {
+        color: #D1D5DB !important; // ← FORZAR GRIS CLARO EN LUGAR DE VAR
+        font-size: 0.9rem;
+        flex-grow: 1;
+      }
+      
+      .card-button {
+        --color: var(--ion-color-primary);
+        font-weight: 600;
+        margin-top: 16px;
+        justify-content: flex-end;
+      }
+    }
+  }
+
+  // ← AGREGAR BACKGROUND AL CONTENT
+  ion-content {
+    --background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+  }
 }

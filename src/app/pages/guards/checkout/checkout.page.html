@@ -1,51 +1,44 @@
+<!-- ====================================================== -->
+<!-- GUARDS/CHECKOUT.PAGE.HTML -->
+<!-- ====================================================== -->
 <ion-header mode="ios">
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button default-href="/guards/home"></ion-back-button>
+    </ion-buttons>
     <ion-title>Check Out</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
-
   <ion-card>
-    <div class="table-responsive container">
+    <ion-searchbar [(ngModel)]="searchKey" animated="true" placeholder="Buscar por nombre, DNI o autorizado..."></ion-searchbar>
     
-      <ion-row>
-        <ion-col><ion-searchbar [(ngModel)]="searchKey" animated="true" placeholder="Buscar invitados..."></ion-searchbar></ion-col>
-      </ion-row>
-    
-    <table class="table">
-      <thead>
-        <tr>
-          <th scope="col">CheckOut</th>
-          <th scope="col" class="name">Nombre</th>
-          <th scope="col">DNI</th>
-          <th scope="col">Fecha</th>
-          <th scope="col">Hora</th>
-          <th scope="col">Autorizado Por</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let guest of checkOutList | filterBy: searchKey ; let i = index">
-          
-          <td>
-            <ion-button (click)="checkOut(guest, i)" color="danger" expand="block" fill="clear" shape="round">
-              <ion-icon slot="icon-only" name="exit-outline"></ion-icon>
-            </ion-button>
-          </td>
-          <td>{{guest.guest_name}}</td>
-          <td>{{guest.DNI}}</td>
-          <td>{{guest.income_date | date : 'shortDate'}}</td>
-          <td>{{guest.income_date | date : 'shortTime'}}</td>
-          <td> {{guest.user.name}} </td>
-        </tr>
-        <tr>
-        
-      </tbody>
-    </table>   
-    
-    
+    <div class="table-responsive-wrapper">
+      <table class="styled-table">
+        <thead>
+          <tr>
+            <th>CheckOut</th>
+            <th>Nombre</th>
+            <th>DNI</th>
+            <th>Fecha y Hora</th>
+            <th>Autorizado Por</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let guest of checkOutList | filterBy: searchKey ; let i = index">
+            <td class="action-cell">
+              <ion-button (click)="checkOut(guest, i)" color="danger" fill="clear" shape="round">
+                <ion-icon slot="icon-only" name="exit-outline"></ion-icon>
+              </ion-button>
+            </td>
+            <td>{{guest.guest_name}}</td>
+            <td>{{guest.DNI}}</td>
+            <td>{{guest.income_date | date : 'dd/MM/yy HH:mm'}}</td>
+            <td>{{guest.user.name}}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-    
-    </ion-card>
-
+  </ion-card>
 </ion-content>
