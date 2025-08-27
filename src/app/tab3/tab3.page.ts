@@ -1,3 +1,4 @@
+//app/tab3/tab3.page.ts
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -318,11 +319,16 @@ export class Tab3Page implements OnInit {
         }
         
         // Limpiar storage local (descomenta si tienes estos métodos)
-        // await this._userStorageService.clearUser();
-        // await this._ownerStorageService.clearOwner();
+        await this._userStorageService.removeUser();
+        await this._ownerStorageService.signOut();
         
+        //Limpiar variables locales
+        this.user = null;
+        this.userID = '';
+        this.owner = null;
+
         // Redirigir al login INMEDIATAMENTE
-        await this.router.navigate(['/login']);
+        await this.router.navigate(['/login', { replaceUrl: true }]);
         
         // Mostrar mensaje después de redirigir
         setTimeout(() => {

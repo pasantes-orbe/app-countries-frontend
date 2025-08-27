@@ -9,6 +9,9 @@ export interface UserInterface {
     dni: number;
     avatar: string | null;
     role_id: number;
+    role: {  // Esta propiedad existía en los datos pero no en la interfaz
+        name: string;
+    };
 }
 export interface User {
     id: number;
@@ -21,4 +24,7 @@ export interface User {
     dni: number;
     avatar: string | null;
     role_id: number;
+    role: {  // Esta propiedad existía en los datos pero no en la interfaz
+        name: string;
+    };
 }
