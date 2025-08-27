@@ -1,9 +1,10 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+/* ====================================================== */
+/* GUARDS/HOME.PAGE.TS */
+/* ====================================================== */
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
-import { WebSocketService } from 'src/app/services/websocket/web-socket.service';
-import { io, Socket } from 'socket.io-client'; 
-import { environment } from 'src/environments/environment';
+import { Router } from '@angular/router';
 import { NavbarGuardsComponent } from 'src/app/components/navbars/navbar-guards/navbar-guards.component';
 
 @Component({
@@ -19,21 +20,31 @@ import { NavbarGuardsComponent } from 'src/app/components/navbars/navbar-guards/
 })
 export class HomePage implements OnInit {
 
-  private socket: Socket;
-  @ViewChild('navbar') navbar : NavbarGuardsComponent
+  constructor(private router: Router) {}
 
-  constructor() {
-    this.socket = io(environment.URL)
+  ngOnInit() {}
+
+  navigateToCheckin() {
+    this.router.navigate(['/checkin']);
   }
 
-  ngOnInit() {
-    this.socket.on('notificacion-nuevo-confirmedByOwner', (payload) =>{
-      setTimeout(async cb =>  await this.navbar.ngOnInit(), 1000)
-    })
-    
-    this.socket.on('notificacion-antipanico', (payload) =>{
-      setTimeout(async cb =>  await this.navbar.ngOnInit(), 1000)
-    })
+  navigateToAuthorizations() {
+    this.router.navigate(['/guards/authorizations']);
   }
 
+  navigateToCheckout() {
+    this.router.navigate(['/checkout']);
+  }
+
+  navigateToEvents() {
+    // NOTA: La ruta se basa en tu archivo app.routes.ts
+    this.router.navigate(['/admin/events-historial']);
+  }
+
+  logout() {
+    console.log('Cerrando sesión del guardia...');
+    // Aquí iría la lógica para limpiar el storage y redirigir
+    // this.authService.logout();
+    this.router.navigate(['/login']);
+  }
 }

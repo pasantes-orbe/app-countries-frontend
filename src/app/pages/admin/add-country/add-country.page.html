@@ -1,50 +1,36 @@
-<!-- --- Archivo: src/app/pages/admin/add-country/add-country.page.html (Corregido) --- -->
-
-<app-navbar-back title="Volver"></app-navbar-back>
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button default-href="/admin/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Añadir Nuevo Country</ion-title>
+  </ion-toolbar>
+</ion-header>
 
 <ion-content class="ion-padding">
-  <h2 class="text-center">Añadir nuevo Country</h2>
-
-  <!-- 
-    CORRECCIÓN: Se enlaza el formulario a la propiedad pública 'form' 
-    y se elimina el [(ngModel)] redundante.
-  -->
-  <form [formGroup]="form" (ngSubmit)="addCountry()">
-    <ion-label position="floating">Ubicá el marcador en el Country</ion-label>
-
-    <div class="map-container">
-      <div class="map-frame">
-        <!-- SE COMENTA EL DIV DEL MAPA Y SE AÑADE UN MENSAJE TEMPORAL -->
-        <!-- <div id="map"></div> -->
-        <div
-          style="text-align: center; padding: 20px; color: #999; border: 1px dashed #ccc; border-radius: 10px; margin-top: 10px;">
-          <ion-icon name="map-outline" style="font-size: 48px;"></ion-icon>
-          <p>El mapa está temporalmente desactivado para la migración.</p>
-        </div>
-      </div>
-    </div>
-
+  <form class="form-container">
     <ion-item>
-      <ion-label position="floating">Nombre del Country</ion-label>
-      <ion-input type="text" required formControlName="countryName"></ion-input>
+      <ion-label position="floating">Nombre del Country<ion-text color="danger">*</ion-text></ion-label>
+      <ion-input required type="text"></ion-input>
     </ion-item>
 
-    <hr>
+    <ion-item>
+      <ion-label position="floating">Dirección<ion-text color="danger">*</ion-text></ion-label>
+      <ion-input required type="text"></ion-input>
+    </ion-item>
 
-    <ion-label position="floating">Añadir una imagen</ion-label>
+    <ion-item>
+      <ion-label position="floating">Localidad</ion-label>
+      <ion-input type="text"></ion-input>
+    </ion-item>
 
-    <ion-card button>
-      <img [src]="newImg" alt="Vista previa de la imagen">
-      <ion-input (change)="onFileChange($event)" formControlName="countryAvatar" type="file"
-        name="countryAvatar"></ion-input>
-    </ion-card>
+    <ion-item>
+      <ion-label position="floating">Teléfono de Contacto</ion-label>
+      <ion-input type="tel"></ion-input>
+    </ion-item>
 
-    <!-- 
-      CORRECCIÓN: El botón se deshabilita basándose en la propiedad 'form.invalid'.
-    -->
-    <ion-button type="submit" [disabled]="form.invalid" expand="block" shape="round">
-      <ion-icon slot="start" name="add"></ion-icon>
-      Agregar Country
+    <ion-button class="submit-button" size="large" expand="block" color="primary" type="submit">
+      Guardar Country
     </ion-button>
   </form>
 </ion-content>

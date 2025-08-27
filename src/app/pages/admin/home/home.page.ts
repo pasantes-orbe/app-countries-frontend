@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import { AlertController, PopoverController } from '@ionic/angular';
 
@@ -36,7 +36,8 @@ export class HomePage implements OnInit {
     private countriesService: CountriesService,
     private countryStorage: CountryStorageService,
     private alertCtrl: AlertController,
-    private popoverController: PopoverController
+    private popoverController: PopoverController,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -47,12 +48,76 @@ export class HomePage implements OnInit {
     this.getCountriesFromDB();
   }
 
+  // ====================================================
+  // MÉTODOS DE NAVEGACIÓN
+  // ====================================================
+  
+  // MÉTODOS DE NAVEGACIÓN CORRECTOS:
+
+navigateToCountries() {
+  // Ya estás en admin/home que lista countries
+  // Puedes ir al dashboard del country o crear uno nuevo
+  this.router.navigate(['/admin/country-dashboard']);
+}
+
+navigateToOwners() {
+  // Ir a la vista de propietarios
+  this.router.navigate(['/admin/view-owners']);
+}
+
+navigateToGuards() {
+  // Ir a la vista de todos los guardias
+  this.router.navigate(['/admin/all-guards']);
+}
+
+navigateToReports() {
+  // Ir al historial de eventos (reportes)
+  this.router.navigate(['/admin/events-historial']);
+}
+
+navigateToAddCountry() {
+  // Ir a la vista para agregar un nuevo país
+  this.router.navigate(['/admin/add-country']);
+}
+
+navigateToAddOwner() {
+  // Ir a la vista para agregar un nuevo propietario
+  this.router.navigate(['/admin/add-country-owner']);
+}
+
+navigateToAssignCountryToOwner() {
+  // Ir a la vista para asignar un país a un propietario
+  this.router.navigate(['/admin/assign-country-to-owner']);
+}
+
+navigateToAddAmenity() {
+  // Ir a la vista para agregar una nueva amenidad
+  this.router.navigate(['/admin/add-amenity']);
+}
+
+navigateToViewAllAmenities() {
+  // Ir a la vista para ver todas las amenidades
+  this.router.navigate(['/admin/view-all-amenities']);
+}
+
+navigateToMapGuards() {
+  // Ir a la vista del mapa con todos los guardias
+  this.router.navigate(['/map-guards']);
+}
+
+navigateToAddProperty() {
+  // Ir a la vista para agregar una nueva propiedad
+  this.router.navigate(['/admin/add-property']);
+}
+
+  // ====================================================
+  // MÉTODOS EXISTENTES
+  // ====================================================
+
   private getCountriesFromDB() {
     this.countriesService.getAll().subscribe({
       next: (data) => {
-        // Corregir el filtro - usar la propiedad correcta o manejar undefined
         this.countries = (data as CountryInteface[]).filter(country => {
-          // Si no tiene la propiedad isActive, se considera activo por defecto
           return country.isActive !== false;
         });
       },
@@ -77,7 +142,6 @@ export class HomePage implements OnInit {
     });
 
     popover.onDidDismiss().then((data) => {
-      // Si el popover devolvió que se borró algo, actualizamos la lista
       if (data?.data?.deleted) {
         this.getCountriesFromDB();
       }
@@ -86,7 +150,6 @@ export class HomePage implements OnInit {
     return await popover.present();
   }
 
-  // Método para manejar errores de manera centralizada
   private async handleError(error: any) {
     const alert = await this.alertCtrl.create({
       header: 'Error',
@@ -98,9 +161,7 @@ export class HomePage implements OnInit {
     console.error('Error al cargar países:', error);
   }
 
-  // Método helper para obtener la imagen del país
   getCountryImage(country: CountryInteface): string {
-    // Usar avatar si existe, sino usar image, sino una imagen por defecto
     return country.avatar || country.image || 'https://ionicframework.com/docs/img/demos/card-media.png';
   }
 }

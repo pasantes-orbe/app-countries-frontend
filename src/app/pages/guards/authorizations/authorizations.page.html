@@ -1,16 +1,37 @@
+<!-- ====================================================== -->
+<!-- GUARDS/AUTHORIZATIONS.PAGE.HTML -->
+<!-- ====================================================== -->
+<ion-header mode="ios" [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button default-href="/guards/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Autorizaciones</ion-title>
+  </ion-toolbar>
+</ion-header>
+
 <ion-content class="ion-padding">
+  <ion-searchbar placeholder="Buscar por nombre o DNI..."></ion-searchbar>
 
-  <app-incomes-guards #incomes></app-incomes-guards>
+  <ion-card class="authorization-card">
+    <ion-card-header>
+      <ion-card-title>Juan Pérez</ion-card-title>
+      <ion-card-subtitle>DNI: 30.123.456</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <p>Autorizado por: <strong>Familia Gomez (Lote 12A)</strong></p>
+      <p>Tipo: <strong>Visita Única</strong></p>
+    </ion-card-content>
+  </ion-card>
 
-  <ion-button class="ion-margin-top" (click)="viewRecurrents()" expand="block" fill="clear" shape="round">
-    Ver Recurrentes 
-    <ion-icon *ngIf="recurrentsState" name="chevron-down-outline"></ion-icon> 
-    <ion-icon *ngIf="!recurrentsState" name="chevron-forward-outline"></ion-icon>
-  </ion-button>
-
-  <div *ngIf="recurrentsState" >
-    <app-recurrents-view-all [readOnly]="true" role="guard" #recurrents ></app-recurrents-view-all>
-  </div>
-
-
+  <ion-card class="authorization-card">
+    <ion-card-header>
+      <ion-card-title>María Lopez</ion-card-title>
+      <ion-card-subtitle>DNI: 32.456.789</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <p>Autorizado por: <strong>Familia Rodriguez (Lote 25C)</strong></p>
+      <p>Tipo: <strong>Personal Recurrente</strong></p>
+    </ion-card-content>
+  </ion-card>
 </ion-content>

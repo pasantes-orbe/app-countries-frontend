@@ -1,30 +1,66 @@
-<app-navbar-guards #navbar></app-navbar-guards>
+<!-- ====================================================== -->
+<!-- GUARDS/HOME.PAGE.HTML -->
+<!-- ====================================================== -->
+<!--
+  NOTA: Se ha rediseñado el header para que sea idéntico al de Propietarios
+  y se han añadido los nuevos botones de acción.
+-->
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start" class="header-brand">
+      <img src="assets/logos/logo-48.png" class="header-logo" alt="Zentry Logo" />
+      <span class="header-title-text">Zentry</span>
+    </ion-buttons>
+    
+    <ion-buttons slot="end">
+      <ion-button fill="clear" class="notification-button">
+        <ion-icon slot="icon-only" name="notifications-outline"></ion-icon>
+      </ion-button>
+      <ion-avatar>
+        <!-- Se puede reemplazar por la imagen real del guardia -->
+        <img src="https://placehold.co/64x64/374151/FFFFFF?text=G" />
+      </ion-avatar>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
 
-<!-- 
-<ion-content class="ion-padding">
+<ion-content class="guards-content">
+  <div class="guards-header">
+    <ion-avatar class="guard-photo">
+      <ion-icon name="shield-outline" class="guard-icon"></ion-icon>
+    </ion-avatar>
+    <h2>Nombre del Guardia</h2>
+    <p>Panel de control</p>
+  </div>
 
-  <h3 class="text-center">PANEL PARA VIGILADORES</h3>
+  <!-- Contenedor para centrar los botones de acción -->
+  <div class="actions-container">
+    <div class="action-card" (click)="navigateToCheckin()">
+      <ion-icon name="arrow-forward-circle-outline"></ion-icon>
+      <h3>REGISTRAR INGRESO</h3>
+    </div>
 
-  <app-incomes-guards></app-incomes-guards> -->
-
-<ion-tabs>
-  <ion-tab-bar slot="bottom">
-    <ion-tab-button tab="checkin">
-      <ion-icon color="success" name="arrow-forward-circle-outline"></ion-icon>
-      <ion-label color="success">CHECK IN</ion-label>
-    </ion-tab-button>
-
-    <ion-tab-button tab="autorizaciones">
+    <div class="action-card" (click)="navigateToAuthorizations()">
       <ion-icon name="shield-checkmark-outline"></ion-icon>
-      <ion-label>AUTORIZACIONES</ion-label>
-    </ion-tab-button>
+      <h3>VER AUTORIZACIONES</h3>
+    </div>
 
-    <ion-tab-button tab="checkout">
-      <ion-icon color="danger" name="arrow-back-circle-outline"></ion-icon>
-      <ion-label color="danger">CHECK OUT</ion-label>
-    </ion-tab-button>
+    <div class="action-card" (click)="navigateToCheckout()">
+      <ion-icon name="arrow-back-circle-outline"></ion-icon>
+      <h3>REGISTRAR EGRESO</h3>
+    </div>
 
-  </ion-tab-bar>
-</ion-tabs>
+    <div class="action-card" (click)="navigateToEvents()">
+      <ion-icon name="calendar-outline"></ion-icon>
+      <h3>VER EVENTOS</h3>
+    </div>
+  </div>
 
-<!-- </ion-content> -->
+  <!-- Botón de Cerrar Sesión -->
+  <div class="logout-container">
+    <ion-button class="logout-button" (click)="logout()" color="danger" expand="block">
+      <ion-icon slot="start" name="log-out-outline"></ion-icon>
+      Cerrar Sesión
+    </ion-button>
+  </div>
+</ion-content>

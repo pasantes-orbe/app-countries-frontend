@@ -1,41 +1,44 @@
-// --- Archivo: src/app/pages/admin/add-country/add-country.page.ts (Corregido) ---
-
-import { AfterViewInit, Component } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { ReactiveFormsModule } from '@angular/forms';
-// import 'leaflet/dist/leaflet.css'; // PASO 1: Se comenta la importación de Leaflet.
-// import * as L from 'leaflet'; // PASO 2: Se comenta la importación de Leaflet.
-// import 'leaflet-defaulticon-compatibility'; // PASO 3: Se comenta la importación de Leaflet.
+import * as L from 'leaflet';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { AlertService } from 'src/app/services/helpers/alert.service';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { CountriesService } from 'src/app/services/countries/countries.service';
 
-//Componentes
+// Componentes
 import { NavbarBackComponent } from "src/app/components/navbars/navbar-back/navbar-back.component";
+
+// Fix para iconos de Leaflet
+delete (L.Icon.Default.prototype as any)._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'assets/leaflet/marker-icon-2x.png',
+  iconUrl: 'assets/leaflet/marker-icon.png',
+  shadowUrl: 'assets/leaflet/marker-shadow.png',
+});
+
 @Component({
   selector: 'app-add-country',
   templateUrl: './add-country.page.html',
   styleUrls: ['./add-country.page.scss'],
   standalone: true,
- imports: [
-  CommonModule,
-  IonicModule,
-  ReactiveFormsModule,
-  NavbarBackComponent
-]
+  imports: [
+    CommonModule,
+    IonicModule,
+    ReactiveFormsModule,
+    NavbarBackComponent
+  ]
 })
-export class AddCountryPage implements AfterViewInit {
-
-  private map: any;
-  public lat: number;
-  public lng: number;
-  public marker: any;
-  public newImg: any = "https://ionicframework.com/docs/img/demos/card-media.png";
+export class AddCountryPage implements AfterViewInit, OnDestroy {
+  private map: L.Map | null = null;
+  public lat: number = -27.5615;
+  public lng: number = -58.7521;
+  public marker: L.Marker | null = null;
+  public newImg: string = "https://ionicframework.com/docs/img/demos/card-media.png";
   
-  // CORRECCIÓN: La propiedad 'form' ahora es pública para que el HTML pueda acceder a ella.
   public form: FormGroup;
 
   constructor(
@@ -57,74 +60,76 @@ export class AddCountryPage implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    // PASO 4: Se comenta la inicialización del mapa para desactivarlo.
-    // this.initMap();
+    this.initMap();
+  }
+
+  ngOnDestroy(): void {
+    if (this.map) {
+      this.map.remove();
+    }
   }
 
   private initMap(): void {
-    // --- SE COMENTA TODA LA LÓGICA DEL MAPA PARA DESACTIVARLO ---
-    /*
+    // Crear mapa centrado en coordenadas por defecto
     this.map = L.map('map', {
-      center: [-27.5615, -58.7521],
+      center: [this.lat, this.lng],
       zoom: 8
     });
 
+    // Agregar tiles
     const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     });
     tiles.addTo(this.map);
 
+    // Fix para el tamaño del mapa
     setTimeout(() => {
-      this.map.invalidateSize(true);
+      if (this.map) {
+        this.map.invalidateSize(true);
+      }
     }, 100);
 
     this.map.attributionControl.setPrefix(false);
 
-    const iconRetinaUrl = 'assets/marker-guard.webp';
-    const iconUrl = 'assets/marker-guard.webp';
-    const iconDefault = L.icon({
-      iconRetinaUrl,
-      iconUrl,
-      iconSize: [35, 35],
-      iconAnchor: [12, 41],
-      popupAnchor: [1, -34],
-      tooltipAnchor: [16, -28],
-      shadowSize: [41, 41]
-    });
+    // Crear marcador arrastrable
+    this.marker = L.marker([this.lat, this.lng], {
+      draggable: true
+    }).addTo(this.map);
 
-    this.marker = new L.marker([-27.5615, -58.7521], {
-      draggable: 'true'
-    });
-
-    L.Marker.prototype.options.icon = iconDefault;
-    this.map.addLayer(this.marker);
-
-    this.marker.addEventListener('dragend', (event) => {
-      let position = event.target.getLatLng();
+    // Listener para cuando se arrastra el marcador
+    this.marker.on('dragend', (event) => {
+      const position = (event.target as L.Marker).getLatLng();
       this.lat = position.lat;
       this.lng = position.lng;
+      console.log('Nueva posición:', this.lat, this.lng);
     });
-    */
+
+    // Listener para clicks en el mapa
+    this.map.on('click', (event) => {
+      const { lat, lng } = event.latlng;
+      this.lat = lat;
+      this.lng = lng;
+      
+      if (this.marker) {
+        this.marker.setLatLng([lat, lng]);
+      }
+    });
   }
 
-  setCoords() {
+  setCoords(): void {
     if (this.marker) {
       const { lat, lng } = this.marker.getLatLng();
       this.lat = lat;
       this.lng = lng;
-    } else {
-      // Se asignan coordenadas por defecto si el mapa está desactivado.
-      this.lat = -27.5615;
-      this.lng = -58.7521;
     }
   }
 
-  onFileChange(event: any) {
+  onFileChange(event: any): void {
     const file = event.target.files[0];
     if (file) {
       const reader = new FileReader();
-      reader.onload = e => this.newImg = reader.result;
+      reader.onload = () => this.newImg = reader.result as string;
       reader.readAsDataURL(file);
 
       this.form.patchValue({
@@ -141,7 +146,6 @@ export class AddCountryPage implements AfterViewInit {
 
     this.setCoords();
     
-    // Se asume que el servicio devuelve una Promise.
     this._countries.addCountry(
       this.form.value.fileSource,
       this.form.value.countryName,

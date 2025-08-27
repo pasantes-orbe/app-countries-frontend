@@ -1,16 +1,25 @@
+/* login.page.scss */
 
 $mobile: 80px;
 $desktop: 130px;
 
-ion-avatar{
-    width: $desktop;
-    height: $desktop;
+ion-card {
+  box-shadow: none;
 }
 
-ion-card{
-    box-shadow: none;
+ion-item {
+  margin-bottom: 20px;
 }
 
-ion-item{
-    margin-bottom: 20px;
+/*
+  CORRECCIÓN DEFINITIVA:
+  Se aplican los estilos directamente al ion-avatar dentro de esta página
+  para asegurar que siempre esté centrado, sin depender de clases globales.
+*/
+ion-avatar {
+  width: $desktop;
+  height: $desktop;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 1rem; /* Añade un poco de espacio debajo */
 }

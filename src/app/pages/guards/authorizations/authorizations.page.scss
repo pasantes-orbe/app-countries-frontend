@@ -1,13 +1,32 @@
-.customAlert {
-    .alert-wrapper{
-        --background: red!important;
-    }
-    .alert-head {
-        background-color: #fe4918;
-    }
+/* ====================================================== */
+/* GUARDS/AUTHORIZATIONS.PAGE.SCSS */
+/* ====================================================== */
+:host {
+  ion-toolbar {
+    --background: var(--ion-toolbar-background);
   }
 
+  ion-searchbar {
+    --background: var(--color-card);
+    --border-radius: 8px;
+    margin-bottom: 1rem;
+  }
 
-.paddingTop{
-    padding-top: 100px;
+  .authorization-card {
+    --background: var(--color-card);
+    margin-bottom: 1rem;
+
+    ion-card-title {
+      font-family: var(--font-heading);
+      font-weight: 600;
+    }
+
+    ion-card-subtitle {
+      color: var(--color-text-secondary);
+    }
+    
+    p {
+      margin-bottom: 4px;
+    }
+  }
 }

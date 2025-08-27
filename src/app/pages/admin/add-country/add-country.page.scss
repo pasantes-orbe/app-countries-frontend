@@ -1,22 +1,27 @@
-.map-container {
-    position: relative;
-    width: 100vw;
-    height: 300px;    
-  }
-  
-  .map-frame {
-    border: 2px solid black;
-    height: 100%;
-  }
-  
-  #map {
-    height: 100%;
+/* ====================================================== */
+/* ADMIN/ADD-COUNTRY.PAGE.SCSS (Plantilla de Formulario) */
+/* ====================================================== */
+:host {
+  ion-toolbar {
+    --background: var(--ion-toolbar-background);
   }
 
-  ion-item{
-    margin: 20px 0;
-}
+  .form-container {
+    max-width: 600px;
+    margin: 0 auto;
+  }
 
-ion-button{
-  margin: 20px 0;
+  ion-item {
+    --background: var(--color-card);
+    --border-color: var(--color-border);
+    --border-radius: 8px;
+    margin-bottom: 1rem;
+  }
+
+  .submit-button {
+    margin-top: 1.5rem;
+    height: 48px;
+    font-family: var(--font-heading);
+    font-weight: 600;
+  }
 }

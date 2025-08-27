@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AlertController } from '@ionic/angular';
 import * as L from 'leaflet';
@@ -16,6 +16,14 @@ import { AlertService } from 'src/app/services/helpers/alert.service';
 import { GuardPointInterface } from 'src/app/interfaces/guardsPoints-interface';
 import { CountriesService } from 'src/app/services/countries/countries.service';
 
+// Fix para iconos de Leaflet en Angular
+delete (L.Icon.Default.prototype as any)._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'assets/leaflet/marker-icon-2x.png',
+  iconUrl: 'assets/leaflet/marker-icon.png',
+  shadowUrl: 'assets/leaflet/marker-shadow.png',
+});
+
 @Component({
   selector: 'app-country-map',
   templateUrl: './country-map.component.html',
@@ -26,16 +34,16 @@ import { CountriesService } from 'src/app/services/countries/countries.service';
     IonicModule
   ]
 })
-export class CountryMapComponent implements AfterViewInit {
+export class CountryMapComponent implements AfterViewInit, OnInit, OnDestroy {
   private socket: Socket;
-  private map: any;
-  private tileLayer: any;
+  private map: L.Map | null = null;
+  private tileLayer: L.TileLayer | null = null;
   protected antipanicState: boolean = false; 
   protected antipanicID: any;
   protected activeGuards: GuardPointInterface[] = [];
-  public countryLat: any;
-  public countryLng: any;
-  public markers: any[] = [];
+  public countryLat: number = 0;
+  public countryLng: number = 0;
+  public markers: L.CircleMarker[] = [];
   public id_country: any;
   public id_user: any;
 
@@ -55,18 +63,33 @@ export class CountryMapComponent implements AfterViewInit {
     this.id_user = owner.user.id;
     this.id_country = owner.property.id_country.toString();
     
-    // Lógica de Sockets restaurada
+    // Configuración de Socket listeners
+    this.setupSocketListeners();
+  }
+
+  private setupSocketListeners(): void {
     this.socket.on('get-actives-guards', (payload) => {
       this.removeMarkers();
       this.activeGuards = payload;
       this.activeGuards.forEach((data) => {
-        if (data.id_country == this.id_country)
-        this.addPoint(data.lat, data.lng, `Vigilador: <b>${data.user_name} - ${data.user_lastname}</b>`);
+        if (data.id_country == this.id_country) {
+          this.addPoint(data.lat, data.lng, `Vigilador: <b>${data.user_name} - ${data.user_lastname}</b>`);
+        }
       });
     });
 
     this.socket.on('guardDisconnected', (payload) => {
       this.removeMarkers();
+    });
+
+    this.socket.on('notificacion-antipanico-finalizado', (payload) => {
+      console.log(payload);
+      this.antipanicState = false;
+      const box = document.querySelector('.box') as HTMLElement;
+      if (box) {
+        box.style.display = 'none';
+      }
+      this._alerts.presentAlertFinishAntipanicDetails(payload['antipanic']['details']);
     });
   }
 
@@ -74,93 +97,116 @@ export class CountryMapComponent implements AfterViewInit {
     const owner = await this._ownerStorage.getOwner();
     const countryID = owner.property.id_country;
       
-    // Lógica de Country Service restaurada
+    // Obtener coordenadas del país y inicializar mapa
     this._countryService.getByID(countryID).subscribe(res => {
       this.countryLat = res['latitude'];
       this.countryLng = res['longitude'];
       this.initMap(res['latitude'], res['longitude']);
     });
-    
-    this.socket.on('notificacion-antipanico-finalizado', (payload) => {
-      console.log(payload);
-      this.antipanicState = false;
-      const box = document.querySelector('.box');
-      (document.querySelector('.box') as HTMLElement).style.display = '';
-      this._alerts.presentAlertFinishAntipanicDetails(payload['antipanic']['details']);
-    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.socket) {
+      this.socket.disconnect();
+    }
+    if (this.map) {
+      this.map.remove();
+    }
   }
   
-  public getTileLayer(): any {
+  public getTileLayer(): L.TileLayer | null {
     return this.tileLayer;
   }
 
   ionViewWillEnter() {
-    this.socket.emit('owner-connected', (this.id_user));
+    this.socket.emit('owner-connected', this.id_user);
   }
   
-  // Lógica de Leaflet restaurada
-  public setTileLayer(url: any): void {
+  public setTileLayer(url: string): void {
     this.tileLayer = L.tileLayer(url, {
-      attribution: ''
+      attribution: '© OpenStreetMap contributors',
+      maxZoom: 19
     });
   }
 
-  private initMap(mapLat: any, mapLng: any): void {
+  private initMap(mapLat: number, mapLng: number): void {
+    // Detectar tema oscuro/claro
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
-    if(prefersDark.matches){
+    if (prefersDark.matches) {
       this.setTileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png');
     } else {
       this.setTileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png');
     }
 
+    // Crear mapa
     this.map = L.map('map', {
       zoomControl: true,
-      layers: [this.getTileLayer()],
+      layers: [this.getTileLayer()!],
     }).setView([mapLat, mapLng], 15);
 
+    // Fix para el tamaño del mapa
     setTimeout(() => {
-      this.getMap().invalidateSize(true);
+      if (this.map) {
+        this.map.invalidateSize(true);
+      }
     }, 100);
-  }
 
-  public addPoint(lat: number, lng: number, html: string = ''): void {
-    const marker = L.circle([lat, lng], {
-      color: 'red',
-      fillColor: '#f03',
-      fillOpacity: 0.5,
-      radius: 15
-    })
-      .bindPopup(html, {closeButton: false})
-      .addTo(this.getMap());
-
-      this.markers.push(marker);
-  }
-
-  public removeMarker(marker: any) {
-    this.map.removeLayer(marker);
-  }
-
-  public removeMarkers() {
-    this.getMarkers().forEach(marker => {
-      this.removeMarker(marker);
+    // Listener para cambios de tema
+    prefersDark.addEventListener('change', (e) => {
+      if (this.map && this.tileLayer) {
+        this.map.removeLayer(this.tileLayer);
+        if (e.matches) {
+          this.setTileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png');
+        } else {
+          this.setTileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png');
+        }
+        this.map.addLayer(this.getTileLayer()!);
+      }
     });
   }
 
-  public getMarkers() {
+  public addPoint(lat: number, lng: number, html: string = ''): void {
+    if (!this.map) return;
+
+    const marker = L.circleMarker([lat, lng], {
+      color: '#ff0000',
+      fillColor: '#ff0000',
+      fillOpacity: 0.7,
+      radius: 8,
+      weight: 2
+    })
+    .bindPopup(html, { closeButton: false })
+    .addTo(this.map);
+
+    this.markers.push(marker);
+  }
+
+  public removeMarker(marker: L.CircleMarker): void {
+    if (this.map) {
+      this.map.removeLayer(marker);
+    }
+  }
+
+  public removeMarkers(): void {
+    this.markers.forEach(marker => {
+      this.removeMarker(marker);
+    });
+    this.markers = [];
+  }
+
+  public getMarkers(): L.CircleMarker[] {
     return this.markers;
   }
 
-  public getMap() {
+  public getMap(): L.Map | null {
     return this.map;
   }
 
-  private setMap(map: any): void {
-    this.map = map;
-  }
-
   async activateAntipanic() {
-    const box = document.querySelector('.box');
-    (document.querySelector('.box') as HTMLElement).style.display = 'block';
+    const box = document.querySelector('.box') as HTMLElement;
+    if (box) {
+      box.style.display = 'block';
+    }
     this.ionViewWillEnter();
 
     this.antipanicState = true;
@@ -201,8 +247,10 @@ export class CountryMapComponent implements AfterViewInit {
           role: 'confirm',
           handler: () => {
             this.antipanicState = false;
-            const box = document.querySelector('.box');
-            (document.querySelector('.box') as HTMLElement).style.display = '';
+            const box = document.querySelector('.box') as HTMLElement;
+            if (box) {
+              box.style.display = 'none';
+            }
           },
         },
         {
