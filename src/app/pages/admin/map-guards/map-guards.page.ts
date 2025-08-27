@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { IonicModule } from '@ionic/angular';
+
 import { CountriesService } from 'src/app/services/countries/countries.service';
 import { CountryStorageService } from 'src/app/services/storage/country-storage.service';
-import * as L from 'leaflet'; // PASO 1: Se comenta la importación de Leaflet.
 import * as L from 'leaflet'; // PASO 1: Se comenta la importación de Leaflet.
 import { Socket, io } from 'socket.io-client';
 import { environment } from 'src/environments/environment';
@@ -11,15 +9,8 @@ import { environment } from 'src/environments/environment';
 //Interfaces
 import { GuardPointInterface } from 'src/app/interfaces/guardsPoints-interface';
 
-<<<<<<< Updated upstream
-//Pipes
-import { FilterByPipe } from '../../../pipes/filter-by.pipe';
-
-//Componentes
-=======
 import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
->>>>>>> Stashed changes
 import { NavbarBackComponent } from 'src/app/components/navbars/navbar-back/navbar-back.component';
 
 
@@ -30,9 +21,6 @@ import { NavbarBackComponent } from 'src/app/components/navbars/navbar-back/navb
   standalone: true,
   imports: [
     CommonModule,
-    IonicModule,
-    NavbarBackComponent
-  ]
     IonicModule,
     NavbarBackComponent
   ]
